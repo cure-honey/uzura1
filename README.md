@@ -6,4 +6,6 @@ cheked with intel fortran ver.17.02
 
 compiler option "/standard-semantics" is required!
 #
+インテルの intel fortran ver.17.02 で実行確認しています。
+コンパイラのオプションとして「F2003セマンティクスを有効にする」必要があります。そうしないと実行時エラーが発生します。
 #
