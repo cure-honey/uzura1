@@ -6,7 +6,7 @@
           integer , parameter :: np2 = 9, nn = 2**np2, nn_2 = nn / 2   ! 2^9 = 512
           real(kd), parameter :: pi = 4 * atan(1.0_kd), pi2 = 2 * pi
           real(kd), parameter :: pi2_n = pi2 / nn
-          integer, save :: indx(nn)
+          integer, save :: indx(nn) 
           integer, private :: i_
           complex(kd), parameter :: omega(0:*) = [(exp(cmplx(0.0_kd, pi2_n * i_, kind = kd)), i_ = 0, nn - 1)] 
           real(kd)   , parameter :: hann_window(*) = [(0.5_kd * (1.0_kd - cos(pi2_n * i_))  , i_ = 0, nn - 1)]

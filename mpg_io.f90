@@ -29,7 +29,7 @@
         class(t_mpgfile),   intent(in out) :: this
         character(len = *), intent(in) :: fn
         integer :: io
-        open(newunit = this%iunit, file = fn, iostat = io, status = 'unknown', recordtype = 'stream')
+        open(newunit = this%iunit, file = fn, iostat = io, status = 'unknown', access = 'stream')
         if (io /= 0) then
           write(*, *) 'i/o error ', io, ' occuerred. file =', this%iunit, 'file name ', fn
           stop 'check output file!'
@@ -49,18 +49,17 @@
       subroutine write_bits_1frame(this, n)
         class(t_mpgfile), intent(in) :: this
         integer, intent(in) :: n
-        integer :: i, j, ipos, m
-        character(len = 4) ::cm
-        equivalence (m, cm) ! integer*4 assumed for m
+        integer :: i, j, ipos
+        integer(int8) :: m
         ipos = 0
         do i = 1, n, 8
           m = 0
-          do j = 1, 8
+          do j = 7, 0, -1
             ipos = ipos + 1
             if (ipos > len(this%bit_string)) exit
-            if (this%bit_string(ipos:ipos) == '1') m = m + 2**(8 - j)
+            if (this%bit_string(ipos:ipos) == '1')  m = ibset(m, j) 
           end do
-          write(this%iunit, '(a1)', advance = 'no') cm(1:1)   ! little endian assumed
+          write(this%iunit) m 
         end do
       end subroutine write_bits_1frame
     
@@ -94,7 +93,7 @@
         type (t_mpg)    , intent(in    ) :: mpg
         integer         , intent(in    ) :: ialloc_bits(:, :)
         integer :: iband, ichannel, icrc
-        icrc = Z'0000FFFF' ! initialize crc 
+        icrc = int(Z'0000FFFF') ! initialize crc 
         call crc16(4, mpg%ibit_rate     , icrc)
         call crc16(2, mpg%isample_rate  , icrc)
         call crc16(1, mpg%ipadding      , icrc)
@@ -144,9 +143,9 @@
           do i = 1, n
             m = 2**(n - i)
             if (mod(inp / m, 2) == 1) then
-              bit_string(ipos:ipos) = '1'
+              this%bit_string(ipos:ipos) = '1'
             else
-              bit_string(ipos:ipos) = '0'
+              this%bit_string(ipos:ipos) = '0'
             end if
             ipos = ipos + 1
           end do
@@ -159,9 +158,8 @@
         integer :: i
         associate (ipos => this%ipos, bit_string => this%bit_string)
           do i = 1, len_trim(str)
-            if (str(i:i) /= '0' .and. str(i:i) /= '1') &
-              call abort('invalid string: subroutine put_bit_c')
-            bit_string(ipos:ipos) = str(i:i)
+            if (str(i:i) /= '0' .and. str(i:i) /= '1') stop 'invalid string: subroutine put_bit_c'
+            this%bit_string(ipos:ipos) = str(i:i)
             ipos = ipos + 1
           end do
         end associate      

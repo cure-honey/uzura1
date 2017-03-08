@@ -1,8 +1,6 @@
     module m_kind
       use, intrinsic :: iso_fortran_env
       public
-      integer, parameter :: k2 = int16
-      integer, parameter :: k4 = int32
       integer, parameter :: kd = real64
     end module m_kind
     

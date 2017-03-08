@@ -131,10 +131,9 @@
         subroutine get_option(mpg, fn_in)
           type(t_mpg), intent(in out) :: mpg
           character (len = :), allocatable, intent(out) :: fn_in
-          integer   (kind = 4) :: narg
-          integer   (kind = 2) :: iarg, length
           character (len = 80) :: buffer
           character (len =  6) :: fmt
+          integer :: narg, iarg, length
           iarg = 0
           narg = command_argument_count() + 1
           do

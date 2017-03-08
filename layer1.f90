@@ -5,7 +5,7 @@
       public :: isubband_normalization, bit_allocation, iquantization
       integer, private :: i_
       ! ISO Table B.1 -- Layer I,II scalefactors
-      real(kd), parameter :: scale_factor(0:*) = &
+      real(kd), parameter :: scale_factor(0:63) = &
                               [(1.0e-14_kd * anint(1.0e14_kd * 2.0_kd * 2.0_kd**(-real(i_, kd) / 3.0_kd )), i_ = 0, 63)]
       
       ! ISO Table C.2 -- Layer I  Signal-to-Noise Ratios
@@ -15,9 +15,9 @@
       real(kd), parameter :: snr(0:14) = [(20.0_kd * LOG10(2.0_kd) * i_, i_ = 0, 14)]
             
       ! ISO Table C.3 -- Layer I Quantization Coefficients
-      real(kd), parameter :: tmp(*) = [( 1.0_kd / 2.0_kd**real(i_ + 1, kd), i_ = 1, 14)]
-      real(kd), parameter :: a(*) = [ 1.0e-9_kd * anint(1.0e9_kd * (1.0e0_kd - tmp))]
-      real(kd), parameter :: b(*) = [-1.0e-9_kd * anint(1.0e9_kd * tmp)]
+      real(kd), parameter :: tmp(14) = [( 1.0_kd / 2.0_kd**real(i_ + 1, kd), i_ = 1, 14)]
+      real(kd), parameter :: a(14) = [ 1.0e-9_kd * anint(1.0e9_kd * (1.0e0_kd - tmp))]
+      real(kd), parameter :: b(14) = [-1.0e-9_kd * anint(1.0e9_kd * tmp)]
     contains
       pure function isubband_normalization(subband) result(iscale_factor)
         real(kd), intent(in) :: subband(0:, 0:, 0:)

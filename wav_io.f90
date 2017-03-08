@@ -7,27 +7,27 @@
       type :: t_fmt
         sequence
         character(4):: chunk_id
-        integer(k4) :: chunk_size
-        integer(k2) :: format_id, channels
-        integer(k4) :: sampling_rate
-        integer(k4) :: bytes_per_sec
-        integer(k2) :: block_size, bits_per_sample
+        integer(int32) :: chunk_size
+        integer(int16) :: format_id, channels
+        integer(int32) :: sampling_rate
+        integer(int32) :: bytes_per_sec
+        integer(int16) :: block_size, bits_per_sample
       end type t_fmt
 
       type :: t_data
         sequence
         character(4) :: chunk_id
-        integer(k4)  :: chunk_size
-        ! integer(k2), allocatable :: pcm16(:)
+        integer(int32)  :: chunk_size
+        !! integer(int16), allocatable :: pcm16(:)
       end type t_data
 
       type :: t_riffwav
         sequence
-        character(4) :: chunk_id
-        integer(k4)  :: chunk_size
-        character(4) :: formattag
-        type (t_fmt ):: fmt
-        type (t_data):: dat
+        character(4)  :: chunk_id
+        integer(int32):: chunk_size
+        character(4)  :: formattag
+        type (t_fmt ) :: fmt
+        type (t_data) :: dat
       end type t_riffwav
 !
       type, extends(t_file) :: t_wavfile
@@ -36,7 +36,7 @@
         integer :: ipos
         character(:), allocatable :: fn
         type (t_riffwav) :: riff
-        integer(k2), allocatable :: pcm16(:) ! <- data of data_chunk
+        integer(int16), allocatable :: pcm16(:) ! <- data of data_chunk
       contains
         procedure, public :: open_file  => open_wav_file
         procedure, public :: close_file => close_wav_file
@@ -111,14 +111,14 @@
         pcm = eoshift(pcm, -384, 0.0_kd, 1)
         select case (this%riff%fmt%channels)
           case (1) !mono
-            pcm(384:1:-1, 1) = real( this%pcm16(ipos:ipos + 384), kind = kd ) / 2**15 
+            pcm(384:1:-1, 1) = real( this%pcm16(ipos:ipos + 384 - 1), kind = kd ) / 2**15 
             ipos = ipos + 384
           case (2) !stereo
-            pcm(384:1:-1, 1) = real( this%pcm16(ipos    :ipos + 2 * 384:2), kind = kd ) / 2**15 ! L 16bit int
-            pcm(384:1:-1, 2) = real( this%pcm16(ipos + 1:ipos + 2 * 384:2), kind = kd ) / 2**15 ! R
+            pcm(384:1:-1, 1) = real( this%pcm16(ipos    :ipos + 2 * 384 - 1:2), kind = kd ) / 2**15 ! L 16bit int
+            pcm(384:1:-1, 2) = real( this%pcm16(ipos + 1:ipos + 2 * 384 - 1:2), kind = kd ) / 2**15 ! R
             ipos = ipos + 2 * 384
           case default
-            call abort('ichannel must be 1 or 2: subroutine wav_get') 
+            stop 'ichannel must be 1 or 2: subroutine wav_get' 
         end select
       end subroutine pcm1frame
 
