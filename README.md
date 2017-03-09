@@ -7,6 +7,7 @@ cheked with intel fortran ver.17.02 and gfortran 5.4.0
 little endian is assumed.
 
 compiler options
+
 -for intel
 
 "/standard-semantics" is required for intel fortran.
@@ -19,7 +20,7 @@ gfortran -std=f2008  kind.f90 mpg.f90 mpg_io.f90 wav_io.f90 filter.f90 crc.f90 p
 
 
 #
-またリトル・エンディアンが仮定されています。
+リトル・エンディアンが仮定されています。
 
 インテルの intel fortran ver.17.02 で実行確認しています。
 コンパイラのオプションとして「F2003セマンティクスを有効にする」必要があります。そうしないと実行時エラーが発生します。
