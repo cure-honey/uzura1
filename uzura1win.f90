@@ -44,10 +44,10 @@
           itot_bits = itot_bits + 4 * 32 * nchannel               ! 4*32*nch bits required for the scale factor bits : 
           if (mpg%icrc == 0) itot_bits = itot_bits + 16 ! 16bits required for the crc
           call bit_allocation(smr, max_bits, itot_bits, ialloc_bits)
-          IF (mpg%icrc == 0) call mp1%encode_crc(mpg, ialloc_bits)
+          if (mpg%icrc == 0) call mp1%encode_crc(mpg, ialloc_bits)
           isubband = iquantization(ialloc_bits, subb%subband, iscale_factor)
-          CALL mp1%encode_body(ialloc_bits, iscale_factor, isubband)
-          CALL mp1%write_bits_1frame(max_bits)
+          call mp1%encode_body(ialloc_bits, iscale_factor, isubband)
+          call mp1%write_bits_1frame(max_bits)
           iframe = iframe + 1
           if (mod(iframe, 200) == 0) call update_status(iframe, ntotal_frames) 
         end do
