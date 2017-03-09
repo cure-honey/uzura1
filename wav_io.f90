@@ -29,7 +29,7 @@
         type (t_fmt ) :: fmt
         type (t_data) :: dat
       end type t_riffwav
-!
+
       type, extends(t_file) :: t_wavfile
         private
         integer :: iunit 
@@ -121,7 +121,6 @@
             stop 'ichannel must be 1 or 2: subroutine wav_get' 
         end select
       end subroutine pcm1frame
-
      ! getters
       integer function get_channel(this)
         class(t_wavfile), intent(in) :: this
