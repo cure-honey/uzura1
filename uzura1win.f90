@@ -60,7 +60,7 @@
           type (t_mpg), intent(in) :: mpg
           write(*, *) 'uzura1 (mpeg-1 audio/layer-I encoder) ver.0.4 '
           write(*, *) 'psychoacoustic model ', mpeg_psy_names(mpg%ipsychoacoustic), &
-                      ' bit rate (kbps)', mpg%ibit_rate
+                      ' bit rate (kbps)', mpeg_bit_rates(mpg%ibit_rate, mpg%layer)
           if (mpg%icrc == 0) write(*, *) 'crc16 error protection enabled'
         end subroutine pr_info
 

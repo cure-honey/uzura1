@@ -159,7 +159,7 @@
                 ya(i) = ya(i) + 10.0_kd**( ( (sp(i, m) + xa(m) - ath_fft(m)) * alpha - cbwl_fft(m) ) / 10.0_kd ) ! non-linear sum
               end do   
             end do   
-            ya = decibel( ya * scale ) + ath_fft * alpha 
+            ya = decibel( ya / zn ) + ath_fft * alpha  ! zn: normalization factor
         ! effective spl
             do i = 1, 256
               m = nint( crbw_fft(i) / scale )
