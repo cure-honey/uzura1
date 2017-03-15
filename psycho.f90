@@ -65,7 +65,7 @@
           private
           public :: psychoacoustics
           real(kd), save :: freq_fft(0:256), pseud_bark(0:256), ath_fft(0:256)
-          real(kd), save :: crbw_fft(0:256), cbwl_fft(0:256), zn(0:256)
+          real(kd), save :: crbw_fft(0:256), cbwl_fft(0:256)
           real(kd), save :: sp(256, 256) ! spreading function for masking
           real(kd), save :: scale
           real(kd), parameter :: alpha = 0.30d0 ! non-linear factor
@@ -105,13 +105,6 @@
             scale =  real(isample_rate, kind = kd) / 2 / 256 ! freq to fft-line scale
             crbw_fft = critical_band_width( freq_fft )       ! critical band width in hz
             cbwl_fft = decibel( crbw_fft )                   ! critical band width in log
-            do i = 1, 256
-              m = nint( crbw_fft(i) / scale )
-              i0 = max(i  - m / 2,   1)           !f0 - bw(f0) / 2 
-              i1 = min(i0 + m - 1, 256)           !f0 + bw(f0) / 2
-              zn(i) = sum( 10.0_kd**( ( cbwl_fft(i0:i1) * alpha - cbwl_fft(i0:i1) ) / 10.0_kd ) ) ! <- normalization factor
-            end do
-
             tmp = 0.0_kd ! pseud bark: integrate critical band  
             do m = 1, 256
               tmp = tmp + ( 1.0_kd / crbw_fft(m - 1) + 1.0_kd / crbw_fft(m) ) / 2 ! trapezoidal integration
@@ -156,18 +149,17 @@
             ya = 0.0_kd
             do i = 1, 256 ! convolution of spreading function 
               do m = 1, 256                                                                                      ! i maskee, m masker
-                ya(i) = ya(i) + 10.0_kd**( ( (sp(i, m) + xa(m) - ath_fft(m) - zn(m)) * alpha - cbwl_fft(m) ) / 10.0_kd ) ! non-linear sum
+                ya(i) = ya(i) + 10.0_kd**( ( (sp(i, m) + xa(m) - ath_fft(m)) * alpha ) / 10.0_kd ) ! non-linear sum
               end do   
             end do   
-            ya = decibel( ya ) + ath_fft * alpha  
+            ya = decibel( ya ) + ath_fft
         ! effective spl
             do i = 1, 256
               m = nint( crbw_fft(i) / scale )
               i0 = max(i  - m / 2,   1)       !f0 - bw(f0) / 2 
               i1 = min(i0 + m - 1, 256)       !f0 + bw(f0) / 2
-              za(i) = sum( 10.0_kd**( (xa(i0:i1) * alpha - cbwl_fft(i0:i1) ) / 10.0_kd ) ) 
+              za(i) = sum( 10.0_kd**( xa(i0:i1) * alpha / 10.0_kd ) ) 
             end do
-            za = decibel( za / zn )  ! zn: normalization factor
         ! smr = snr' - mnr'
             do iband = 1, 32
               m = (iband - 1) * 8 + 1

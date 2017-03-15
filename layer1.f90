@@ -69,7 +69,7 @@
            itot_bits = itot_bits + 12         ! 12 * 1 bit 
           end if
           ialloc_bits( max_pos(1), max_pos(2) ) = k + 1
-          rmnr       ( max_pos(1), max_pos(2) ) = smr( max_pos(1), max_pos(2) ) - snr(k + 1)
+          rmnr       ( max_pos(1), max_pos(2) ) = smr( max_pos(1), max_pos(2) ) - snr(k)
         end do
       end subroutine bit_allocation
 
