@@ -9,10 +9,10 @@
                               [(1.0e-14_kd * anint(1.0e14_kd * 2.0_kd * 2.0_kd**(-real(i_, kd) / 3.0_kd )), i_ = 0, 63)]
       
       ! ISO Table C.2 -- Layer I  Signal-to-Noise Ratios
-      !real(kd), parameter :: snr(0:*) =[ 0.00_kd,  7.00_kd, 16.00_kd, 25.28_kd, 31.59_kd, 37.75_kd, 43.84_kd, & 
-      !                                  49.89_kd, 55.93_kd, 61.96_kd, 67.98_kd, 74.01_kd, 80.03_kd, 86.05_kd, 92.01_kd]
+      real(kd), parameter :: snr(0:*) =[ 0.00_kd,  7.00_kd, 16.00_kd, 25.28_kd, 31.59_kd, 37.75_kd, 43.84_kd, & 
+                                        49.89_kd, 55.93_kd, 61.96_kd, 67.98_kd, 74.01_kd, 80.03_kd, 86.05_kd, 92.01_kd]
       ! empirically better SNR = 20 * log(2^n)
-      real(kd), parameter :: snr(0:14) = [(20.0_kd * LOG10(2.0_kd) * i_, i_ = 0, 14)]
+      !real(kd), parameter :: snr(0:14) = [(20.0_kd * log10(2.0_kd) * i_, i_ = 0, 14)]
             
       ! ISO Table C.3 -- Layer I Quantization Coefficients
       real(kd), parameter :: tmp(14) = [( 1.0_kd / 2.0_kd**real(i_ + 1, kd), i_ = 1, 14)]
@@ -69,7 +69,7 @@
            itot_bits = itot_bits + 12         ! 12 * 1 bit 
           end if
           ialloc_bits( max_pos(1), max_pos(2) ) = k + 1
-          rmnr       ( max_pos(1), max_pos(2) ) = smr( max_pos(1), max_pos(2) ) - snr(k)
+          rmnr       ( max_pos(1), max_pos(2) ) = smr( max_pos(1), max_pos(2) ) - snr(k +1)
         end do
       end subroutine bit_allocation
 
