@@ -156,10 +156,10 @@
             ya = 0.0_kd
             do i = 1, 256 ! convolution of spreading function 
               do m = 1, 256                                                                                      ! i maskee, m masker
-                ya(i) = ya(i) + 10.0_kd**( ( (sp(i, m) + xa(m) - ath_fft(m)) * alpha - cbwl_fft(m) ) / 10.0_kd ) ! non-linear sum
+                ya(i) = ya(i) + 10.0_kd**( ( (sp(i, m) + xa(m) - ath_fft(m) - zn(m)) * alpha - cbwl_fft(m) ) / 10.0_kd ) ! non-linear sum
               end do   
             end do   
-            ya = decibel( ya / zn ) + ath_fft * alpha  ! zn: normalization factor
+            ya = decibel( ya ) + ath_fft * alpha  
         ! effective spl
             do i = 1, 256
               m = nint( crbw_fft(i) / scale )
